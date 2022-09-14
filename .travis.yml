@@ -18,7 +18,7 @@ script:
   - docker-compose -f docker-compose-build.yaml build --parallel
   - docker tag udagram-api-feed onyekaokonji/udagram-api-feed:v1
   - docker tag udagram-api-user onyekaokonji/udagram-api-user:v1
-  - docker tag udagram-frontend onyekaokonji/udagram-frontend:v1
+  - docker tag udagram-frontend onyekaokonji/udagram-frontend:
   - docker tag reverseproxy onyekaokonji/reverseproxy:v1
 
 after_success:
@@ -26,4 +26,39 @@ after_success:
   - docker push onyekaokonji/udagram-api-feed:v1
   - docker push onyekaokonji/udagram-api-user:v1
   - docker push onyekaokonji/udagram-frontend:v1
-  - docker push onyekaokonji/reverseproxy:v1
+  - docker push onyekaokonji/reverseproxy:v1language: node_js
+node_js:
+  - 13
+
+services:
+  - docker
+
+# Pre-testing installs
+install:
+  - echo "nothing needs to be installed"
+
+# Scripts to be run such as tests
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version # print the docker version for logging
+  - docker build -t udagram-api-feed ./udagram-api-feed
+  - docker tag udagram-api-feed onyekaokonji/udagram-api-feed
+
+  - docker build -t udagram-api-user ./udagram-api-user
+  - docker tag udagram-api-user onyekaokonji/udagram-api-user
+
+  - docker build -t udagram-frontend ./udagram-frontend
+  - docker tag udagram-frontend onyekaokonji/udagram-frontend
+
+  - docker build -t reverseproxy ./udagram-reverseproxy
+  - docker tag reverseproxy onyekaokonji/udagram-reverseproxy
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push onyekaokonji/udagram-api-feed
+  - docker push onyekaokonji/udagram-api-user
+  - docker push onyekaokonji/udagram-frontend
+  - docker push onyekaokonji/reverseproxy
+
