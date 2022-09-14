@@ -52,8 +52,8 @@ script:
   - docker build -t udagram-frontend ./udagram-frontend
   - docker tag udagram-frontend onyekaokonji/udagram-frontend
 
-  - docker build -t reverseproxy ./udagram-reverseproxy
-  - docker tag reverseproxy onyekaokonji/udagram-reverseproxy
+  - docker build -t reverseproxy ./reverseproxy
+  - docker tag reverseproxy onyekaokonji/reverseproxy
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
